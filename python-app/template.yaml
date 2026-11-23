@@ -46,28 +46,6 @@ spec:
         protectDefaultBranch: false
         repoVisibility: private 
 
-    - id: apply-runner
-      name: Deploy Self-Hosted Runner
-      action: kubernetes:apply          # ← needs kubernetes plugin
-      input:
-        namespaced: true
-        manifest:
-          apiVersion: actions.summerwind.dev/v1alpha1
-          kind: RunnerDeployment
-          metadata:
-            name: ${{ parameters.app_name }}-runner
-            namespace: actions-runner-system
-          spec:
-            replicas: ${{ parameters.runner_replicas }}
-            template:
-              spec:
-                repository: platform-engineering-001/${{ values.app_name }}
-                labels:
-                  - self-hosted
-                  - linux
-                  - ${{ values.app_name }}
-
-
     - id: register          # register it back into the backstage 
       name: Register
       action: catalog:register
