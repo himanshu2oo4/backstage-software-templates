@@ -28,7 +28,7 @@ spec:
             - prod
 
   steps:
-    - id: fetch-base
+    - id: fetch-base           # render the template 
       name: Fetch Base
       action: fetch:template
       input:
@@ -37,7 +37,7 @@ spec:
           app_name: ${{parameters.component_id}}
           app_env: ${{parameters.environment}}
 
-    - id: publish
+    - id: publish                 # creates a github repo
       name: Publish
       action: publish:github
       input:
@@ -48,7 +48,7 @@ spec:
         protectDefaultBranch: false
         repoVisibility: public
 
-    - id: register
+    - id: register          # register it back into the backstage 
       name: Register
       action: catalog:register
       input:

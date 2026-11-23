@@ -3,10 +3,10 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: ${{values.app_name}}
-  description: A python app to display time 
+  description: A python app to display time and named as ${{values.app_name}}
   # Example for optional annotations
   annotations:
-    github.com/project-slug: backstage/backstage
+    github.com/project-slug: himanshu2oo4/${{values.app_name}}
 spec:
   type: service 
   owner: development          # we'll create this group 
