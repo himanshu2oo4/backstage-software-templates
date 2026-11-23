@@ -1,0 +1,13 @@
+# through this i can use this repo content => python app as a backstage component 
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{values.app_name}}
+  description: A python app to display time 
+  # Example for optional annotations
+  annotations:
+    github.com/project-slug: backstage/backstage
+spec:
+  type: service 
+  owner: development          # we'll create this group 
+  lifecycle: experimental
