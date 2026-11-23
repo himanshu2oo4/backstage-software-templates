@@ -1,13 +1,16 @@
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
-  name: self-hosted-runners
+  name: {{ values.app_name }}-runner
   namespace: actions-runner-system
 spec:
   replicas: 1
   template:
-    metadata: 
-      annotations: 
+    metadata:
+      annotations:
         karpenter.sh/do-not-disrupt: "true"
     spec:
-      repository: platform-engineering-001/${{values.app_name}}
+      repository: platform-engineering-001/{{ values.app_name }}
+      labels:
+        - self-hosted
+        - linux

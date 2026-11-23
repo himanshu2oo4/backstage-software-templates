@@ -9,14 +9,31 @@ on:
 permissions: 
     contents: write 
 jobs: 
+    setting-runner: 
+      runs-on: ubuntu-latest 
+      steps: 
+        - uses: actions/checkout@v4 
+        - name: setup kubectl  
+          uses: azure/setup-kubectl@v3
+
+        - name: apply runner 
+          run: kubectl apply -f runner-deployment.yml
+          env:
+            KUBECONFIG_DATA: ${{ "{{" }} secrets.KUBECONFIG {{ "}}" }}
+        
+        - name: Runner names 
+          run: kubectl get runners -n actions-runner-system 
+        
+        
+
     CI: 
         outputs: 
-          commit_id : ${{ steps.calc_sha.outputs.short_sha }}
+          commit_id : ${{'${{ steps.calc_sha.outputs.short_sha }}'}}
         runs-on: self-hosted
         steps: 
             - uses: actions/checkout@v4
               with: 
-                token: ${{ secrets.GT_TOKEN }}
+                token: ${{'${{ secrets.GT_TOKEN }}'}}
 
             - name: Calculate short SHA
               shell: bash 
