@@ -10,4 +10,4 @@ spec:
       annotations: 
         karpenter.sh/do-not-disrupt: "true"
     spec:
-      repository: platform-engineering-001/python-app-1
+      repository: platform-engineering-001/${{values.app_name}}
