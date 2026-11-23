@@ -10,4 +10,4 @@ spec:
       annotations: 
         karpenter.sh/do-not-disrupt: "true"
     spec:
-      repository: himanshu2oo4/Python-App
+      repository: platform-engineering-001/python-app-1
