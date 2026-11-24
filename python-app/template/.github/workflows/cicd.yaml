@@ -19,8 +19,7 @@ jobs:
         - name: apply runner 
           run: kubectl apply -f runner-deployment.yml
           env:
-            KUBECONFIG_DATA: ${{ "{{" }} secrets.KUBECONFIG {{ "}}" }}
-        
+            KUBECONFIG_B64: ${{ '${{ secrets.KUBECONFIG }}' }}
         - name: Runner names 
           run: kubectl get runners -n actions-runner-system 
         
