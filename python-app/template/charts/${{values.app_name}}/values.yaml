@@ -6,7 +6,7 @@ replicaCount: 1
 image:
   repository: himanshu1236/${{values.app_name}}
   pullPolicy: Always 
-  tag: ${{values.app_name}}-${{values.app_env}}-latest 
+  tag: ${{values.app_name}}-${{values.app_env}}-latest
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
@@ -54,8 +54,12 @@ service:
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
   enabled: true
-  className: "nginx"
-  annotations: {}
+  className: "alb"
+  annotations: 
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+      alb.ingress.kubernetes.io/group.name: platform-shared-alb 
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
