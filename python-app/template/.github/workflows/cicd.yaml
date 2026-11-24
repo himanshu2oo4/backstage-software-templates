@@ -39,6 +39,7 @@ jobs:
             kubectl get pods -n actions-runner-system 
           
     CI: 
+        needs: setting-runner 
         outputs: 
           commit_id : ${{'${{ steps.calc_sha.outputs.short_sha }}'}}
         runs-on: self-hosted
@@ -71,19 +72,19 @@ jobs:
                 push: true 
                 tags: ${{'${{ secrets.DOCKERHUB_USERNAME }}'}}/${{values.app_name}}:${{'${{ steps.calc_sha.outputs.short_sha }}'}}
             
-
+                
             - name: Update image tag in values.yaml of helm
               run: |
                 echo "Before:"
-                grep "tag:" charts/python-app-1/values.yaml
+                grep "tag:" charts/${{'${{values.app_name}}'}}/values-${{'${{values.app_env}}'}}.yaml
                 # Replace ONLY 'latest' at the end with commit SHA
                 sed -i "s/\(tag:.*-\)latest/\1${{ steps.calc_sha.outputs.short_sha }}/" \
-                  charts/python-app-1/values.yaml
+                  charts/${{'${{values.app_name}}'}}/values-${{'${{values.app_env}}'}}.yaml
                 echo "After:"
-                grep "tag:" charts/python-app-1/values.yaml
+                grep "tag:" charts/${{'${{values.app_name}}'}}/values-${{'${{values.app_env}}'}}.yaml 
                 git config user.name "github-actions"
                 git config user.email "github-actions@github.com"
-                git add charts/python-app-1/values.yaml
+                git add charts/${{'${{values.app_name}}'}}/values-${{'${{values.app_env}}'}}.yaml 
                 if git diff --staged --quiet; then
                   echo "No changes to commit"
                 else
