@@ -24,7 +24,7 @@ jobs:
 
         - name: Update kube-config for eks 
           run: | 
-            aws eks update-kubeconfig --name ${{'${{secret.cluster_name}}'}} --region ${{'${{secret.aws_region}}'}}
+            aws eks update-kubeconfig --name ${{'${{secrets.cluster_name}}'}} --region ${{'${{secrets.aws_region}}'}}
 
         - name: verify cluster connection 
           run: kubectl get nodes 
