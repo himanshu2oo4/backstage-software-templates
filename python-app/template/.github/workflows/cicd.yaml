@@ -2,7 +2,7 @@ name: ${{values.app_name}}-cicd-pipeline
 on: 
     push: 
         branches: 
-          - master 
+          - main
         paths: 
           - src/** 
     workflow_dispatch: 
@@ -13,18 +13,31 @@ jobs:
       runs-on: ubuntu-latest 
       steps: 
         - uses: actions/checkout@v4 
-        - name: setup kubectl  
-          uses: azure/setup-kubectl@v3
+      # Step 1 — Configure AWS credentials
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v4
+          with:
+            aws-access-key-id: ${{'${{secrets.aws_access_key_id}}'}}
+            aws-secret-access-key: ${{'${{secrets.aws_access_key}}'}}
+            aws-region: ${{'${{secrets.aws_region }}'}}
 
-        - name: apply runner 
-          run: kubectl apply -f runner-deployment.yml
-          env:
-            KUBECONFIG_B64: ${{ '${{ secrets.KUBECONFIG }}' }}
-        - name: Runner names 
-          run: kubectl get runners -n actions-runner-system 
-        
-        
 
+        - name: Update kube-config for eks 
+          run: | 
+            aws eks update-kubeconfig --name ${{'${{secret.cluster_name}}'}} --region ${{'${{secret.aws_region}}'}}
+
+        - name: verify cluster connection 
+          run: kubectl get nodes 
+          
+        - name: Apply runner deployment 
+          run: |
+              kubectl apply -f runner-deployment.yml 
+
+        - name: check runner status 
+          run: | 
+            kubectl get runners -n actions-runner-system 
+            kubectl get pods -n actions-runner-system 
+          
     CI: 
         outputs: 
           commit_id : ${{'${{ steps.calc_sha.outputs.short_sha }}'}}
